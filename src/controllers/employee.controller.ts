@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { AttendanceModel } from "../models/attendance.model";
 import { EmployeeModel } from "../models/employee.model";
 import { ApiError, asyncHandler } from "../utils/api";
 import { createEmployeeSchema } from "../utils/validation";
@@ -37,6 +38,8 @@ export const deleteEmployee = asyncHandler(async (req: Request, res: Response) =
   if (!employee) {
     throw new ApiError(404, "Employee not found");
   }
+
+  await AttendanceModel.deleteMany({ employeeId: employee._id });
 
   res.status(204).send();
 });
